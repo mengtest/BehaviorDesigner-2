@@ -1,5 +1,12 @@
 {
   "dependencies": {
+    "com.cetejs.gitcommand": {
+      "version": "https://github.com/cetejs/GitCommand.git#upm",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "1f9be1002e88d15e6cb6027f4ac04f30c6139497"
+    },
     "com.unity.collab-proxy": {
       "version": "1.17.1",
       "depth": 0,
