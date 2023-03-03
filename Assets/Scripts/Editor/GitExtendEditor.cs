@@ -7,7 +7,7 @@ using Debug = UnityEngine.Debug;
 
 public class GitExtendEditor
 {
-    [MenuItem("GameFramework/Git/Pull", false, 0)]
+    [MenuItem("Git/Pull", false, 0)]
     public static void Pull()
     {
         string fullPath = Path.Combine(Application.dataPath, "Editor/GitPull.sh");
@@ -27,7 +27,7 @@ public class GitExtendEditor
         File.Delete(fullTempPath);
     }
     
-    [MenuItem("GameFramework/Git/PushPackage", false, 1)]
+    [MenuItem("Git/PushPackage", false, 1)]
     public static void PushPackage()
     {
         string fullPath = Path.Combine(Application.dataPath, "Editor/GitSubtree.sh");
@@ -70,7 +70,7 @@ public class GitExtendEditor
         }
     }
 
-    [MenuItem("GameFramework/Git/PushSamples", false, 2)]
+    [MenuItem("Git/PushSamples", false, 2)]
     public static void PushSamples()
     {
         CopySamples();
@@ -94,7 +94,7 @@ public class GitExtendEditor
         PushPackage();
     }
     
-    [MenuItem("GameFramework/Git/ClearHistory", false, 3)]
+    [MenuItem("Git/ClearHistory", false, 3)]
     public static void ClearHistory()
     {
         CopySamples();
