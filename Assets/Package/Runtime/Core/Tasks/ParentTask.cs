@@ -44,9 +44,9 @@ namespace BehaviorDesigner
             }
         }
         
-        public sealed override void Bind(IBehavior behavior)
+        public sealed override void Bind(BehaviorSource source)
         {
-            base.Bind(behavior);
+            base.Bind(source);
             for (int i = 0; i < children.Count; i++)
             {
                 if (children[i] == null)
@@ -55,7 +55,7 @@ namespace BehaviorDesigner
                 }
                 else
                 {
-                    children[i].Bind(behavior);
+                    children[i].Bind(source);
                 }
             }
         }

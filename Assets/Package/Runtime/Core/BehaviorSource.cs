@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Reflection;
 using UnityEngine;
-using Object = UnityEngine.Object;
 
 namespace BehaviorDesigner
 {
@@ -10,7 +9,6 @@ namespace BehaviorDesigner
     public class BehaviorSource
     {
         public string behaviorName = "Behavior";
-        public int group;
         public string behaviorDescription;
         [SerializeField]
         private string rootJson;
@@ -360,6 +358,21 @@ namespace BehaviorDesigner
         public int NewTaskId()
         {
             return ++taskIdCount;
+        }
+
+        public BehaviorSource Clone()
+        {
+            return new BehaviorSource
+            {
+                behaviorName = behaviorName,
+                behaviorDescription = behaviorDescription,
+                rootJson = rootJson,
+                detachedTasksJson = detachedTasksJson,
+                variablesJson = variablesJson,
+                version = version,
+                taskIdCount = taskIdCount,
+                unityObjects = new List<UnityObject>(unityObjects),
+            };
         }
 
         private void UpdateDetachedTasks(Task task)

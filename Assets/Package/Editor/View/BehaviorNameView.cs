@@ -28,7 +28,7 @@ namespace BehaviorDesigner.Editor
         {
             styleSheets.Add(BehaviorUtils.Load<StyleSheet>("Styles/BehaviorWindow"));
             nameLabel = this.Q<Label>();
-            nameLabel.text = $"{window.Behavior.Object.name} - {window.Behavior.Source.behaviorName} ({window.Behavior.InstanceID})";
+            nameLabel.text = $"{window.Behavior.GetObject(true).name} - {window.Behavior.GetSource(true).behaviorName} ({window.Behavior.InstanceID})";
         }
     }
 }

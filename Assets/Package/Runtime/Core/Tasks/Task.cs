@@ -46,9 +46,9 @@ namespace BehaviorDesigner
             set { disabled = value; }
         }
 
-        public virtual void Bind(IBehavior behavior)
+        public virtual void Bind(BehaviorSource source)
         {
-            behavior.BindVariables(this);
+            source.BindVariables(this);
         }
 
         public virtual void Init(Behavior behavior)

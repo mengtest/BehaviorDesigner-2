@@ -7,37 +7,39 @@ namespace BehaviorDesigner
         [SerializeField]
         private BehaviorSource source;
 
-        public Root Root
-        {
-            get { return Source.Root; }
-        }
-
-        public BehaviorSource Source
-        {
-            get
-            {
-                if (source == null)
-                {
-                    source = new BehaviorSource();
-                }
-
-                return source;
-            }
-        }
-
         public int InstanceID
         {
             get { return GetInstanceID(); }
         }
 
-        public Object Object
+        public Object GetObject(bool local = false)
         {
-            get { return this; }
+            return this;
+        }
+
+        public BehaviorSource GetSource(bool local = false)
+        {
+            if (source == null)
+            {
+                source = new BehaviorSource();
+            }
+
+            return source;
         }
 
         public void BindVariables(Task task)
         {
-            Source.BindVariables(task);
+            GetSource().BindVariables(task);
         }
+
+#if UNITY_EDITOR
+        public ExternalBehavior Clone()
+        {
+            ExternalBehavior behavior = CreateInstance<ExternalBehavior>();
+            behavior.name = string.Concat(name, " (Clone)");
+            behavior.source = source.Clone();
+            return behavior;
+        }
+#endif
     }
 }

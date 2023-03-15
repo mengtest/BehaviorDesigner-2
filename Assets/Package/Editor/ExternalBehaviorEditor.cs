@@ -11,7 +11,7 @@ namespace BehaviorDesigner.Editor
         {
             bool isChanged = false;
             ExternalBehavior behavior = target as ExternalBehavior;
-            BehaviorSource source = behavior.Source;
+            BehaviorSource source = behavior.GetSource(true);
             GUI.enabled = false;
             EditorGUILayout.PropertyField(serializedObject.FindProperty("m_Script"), true);
             GUI.enabled = true;
@@ -19,7 +19,7 @@ namespace BehaviorDesigner.Editor
             GUILayout.BeginHorizontal();
             EditorGUI.BeginChangeCheck();
             EditorGUILayout.LabelField("Behavior Name", GUILayout.Width(120f));
-            source.behaviorName = EditorGUILayout.TextField(behavior.Source.behaviorName);
+            source.behaviorName = EditorGUILayout.TextField(source.behaviorName);
             if (EditorGUI.EndChangeCheck())
             {
                 isChanged = true;
@@ -33,7 +33,6 @@ namespace BehaviorDesigner.Editor
             GUILayout.EndHorizontal();
             EditorGUI.BeginChangeCheck();
             source.behaviorDescription = EditorGUILayout.TextArea(source.behaviorDescription, GUILayout.Height(48f));
-            source.group = EditorGUILayout.IntField("Group", behavior.Source.group);
             if (EditorGUI.EndChangeCheck())
             {
                 isChanged = true;

@@ -23,7 +23,7 @@ namespace BehaviorDesigner.Editor
 
     public abstract class FieldResolver<TField, TFieldValue> : IFieldResolver where TField : BaseField<TFieldValue>
     {
-        protected readonly FieldInfo fieldInfo;
+        protected FieldInfo fieldInfo;
         protected TField editorField;
         protected BehaviorWindow window;
 

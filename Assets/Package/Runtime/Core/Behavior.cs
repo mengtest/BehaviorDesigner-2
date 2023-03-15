@@ -13,9 +13,13 @@ namespace BehaviorDesigner
         [SerializeField]
         private bool resetValuesOnRestart;
         [SerializeField]
+        private int group;
+        [SerializeField]
         private BehaviorSource source;
         [SerializeField]
         private ExternalBehavior external;
+        [NonSerialized]
+        private BehaviorSource externalSource;
 
         private TaskStatus status;
         private bool isInit;
@@ -27,25 +31,12 @@ namespace BehaviorDesigner
 
         public Root Root
         {
-            get { return Source.Root; }
+            get { return GetSource().Root; }
         }
 
-        public BehaviorSource Source
+        public string Name
         {
-            get
-            {
-                if (external != null)
-                {
-                    return external.Source;
-                }
-
-                if (source == null)
-                {
-                    source = new BehaviorSource();
-                }
-
-                return source;
-            }
+            get { return source.behaviorName; }
         }
 
         public int InstanceID
@@ -53,25 +44,63 @@ namespace BehaviorDesigner
             get { return GetInstanceID(); }
         }
 
-        public Object Object
+        public bool RestartWhenComplete
         {
-            get
+            get { return restartWhenComplete; }
+            set { restartWhenComplete = value; }
+        }
+
+        public bool ResetValuesOnRestart
+        {
+            get { return resetValuesOnRestart; }
+            set { resetValuesOnRestart = value; }
+        }
+
+        public int Group
+        {
+            get { return group; }
+            set { group = value; }
+        }
+
+        public Object GetObject(bool local = false)
+        {
+            if (!local && external)
             {
-                if (external != null)
+                return external.GetObject();
+            }
+            
+            return this;
+        }
+
+        public BehaviorSource GetSource(bool local = false)
+        {
+            if (!local && external)
+            {
+                if (Application.isPlaying)
                 {
-                    return external.Object;
+                    if (externalSource == null)
+                    {
+                        externalSource = external.GetSource().Clone();
+                    }
+
+                    return externalSource;
                 }
 
-                return this;
+                return external.GetSource();
             }
+
+            if (source == null)
+            {
+                source = new BehaviorSource();
+            }
+
+            return source;
         }
 
-#if UNITY_EDITOR
-        public void ClearSource()
+        public void BindVariables(Task task)
         {
-            source = new BehaviorSource();
+            GetSource().BindVariables(task);
         }
-#endif
 
         public void SetExternalBehavior(ExternalBehavior behavior)
         {
@@ -83,8 +112,8 @@ namespace BehaviorDesigner
         {
             if (resetValuesOnRestart)
             {
-                Source.ReloadVariables();
-                Root?.Bind(this);
+                GetSource().ReloadVariables();
+                Root?.Bind(GetSource());
             }
 
             isCompleted = false;
@@ -137,17 +166,12 @@ namespace BehaviorDesigner
             Root?.OnFixedUpdate();
         }
 
-        public void BindVariables(Task task)
-        {
-            Source.BindVariables(task);
-        }
-
         private void Init()
         {
             isInit = true;
             isCompleted = false;
-            Source.Load();
-            Root.Bind(this);
+            GetSource().Load();
+            Root.Bind(GetSource());
             Root.Init(this);
             OnBehaviorStart?.Invoke(this);
         }

@@ -84,7 +84,7 @@ namespace BehaviorDesigner.Editor
         {
             CollectSelection();
             DeleteElements(graphElements.ToList());
-            Root root = window.Behavior.Root;
+            Root root = window.Behavior.GetSource().Root;
             rootNode = new RootNode();
             rootNode.Init(root, window);
             AddElement(rootNode);

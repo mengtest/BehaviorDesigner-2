@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 namespace BehaviorDesigner.Tasks
 {
@@ -12,30 +13,44 @@ namespace BehaviorDesigner.Tasks
         [SerializeField]
         private bool resetVariables;
 
+        [NonSerialized]
         private BehaviorSource source;
         private Root root;
         private bool isRestart;
 
+#if UNITY_EDITOR
+        private ExternalBehavior behaviorInstance;
+#endif
+
         public override void OnStart()
         {
             base.OnStart();
-            source = behavior.Source;
+            if (source == null)
+            {
+#if UNITY_EDITOR
+                behaviorInstance = behavior.Clone();
+                source = behaviorInstance.GetSource();
+#else
+                source = behavior.GetSource().Clone();
+#endif
+            }
+
             if (!isRestart)
             {
                 source.Load();
                 root = source.Root;
-                root.Bind(behavior);
+                root.Bind(source);
                 root.Init(owner);
             }
             else if (resetVariables)
             {
                 source.ReloadVariables();
-                root.Bind(behavior);
+                root.Bind(source);
             }
 
             if (syncVariables)
             {
-                SyncVariables(owner, behavior);
+                SyncVariables(owner.GetSource(), source);
             }
 
             root.OnStart();
@@ -51,7 +66,7 @@ namespace BehaviorDesigner.Tasks
         {
             if (syncVariables)
             {
-                SyncVariables(behavior, owner);
+                SyncVariables(source, owner.GetSource());
             }
         }
 
@@ -62,11 +77,11 @@ namespace BehaviorDesigner.Tasks
             resetVariables = false;
         }
 
-        private void SyncVariables(IBehavior b1, IBehavior b2)
+        private void SyncVariables(BehaviorSource s1, BehaviorSource s2)
         {
-            foreach (SharedVariable variable in b1.Source.GetVariables())
+            foreach (SharedVariable variable in s1.GetVariables())
             {
-                SharedVariable targetVariable = b2.Source.GetVariable(variable.Name);
+                SharedVariable targetVariable = s2.GetVariable(variable.Name);
                 if (targetVariable != null)
                 {
                     if (targetVariable.GetType() == variable.GetType())
@@ -76,5 +91,22 @@ namespace BehaviorDesigner.Tasks
                 }
             }
         }
+
+#if UNITY_EDITOR
+        [Button]
+        private void OpenSubtree()
+        {
+            if (behaviorInstance)
+            {
+                UnityEditor.AssetDatabase.OpenAsset(behaviorInstance);
+                return;
+            }
+
+            if (behavior)
+            {
+                UnityEditor.AssetDatabase.OpenAsset(behavior);
+            }
+        }
+#endif
     }
 }

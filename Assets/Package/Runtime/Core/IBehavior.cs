@@ -4,14 +4,10 @@ namespace BehaviorDesigner
 {
     public interface IBehavior
     {
-        Root Root { get; }
-
-        BehaviorSource Source { get; }
-
         int InstanceID { get; }
 
-        Object Object { get; }
-
-        void BindVariables(Task task);
+        Object GetObject(bool local = false);
+        
+        BehaviorSource GetSource(bool local = false);
     }
 }

@@ -144,6 +144,20 @@ namespace BehaviorDesigner.Editor
                 });
             }
 
+            MethodInfo[] methods = type.GetMethods(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+            foreach (MethodInfo method in methods)
+            {
+                ButtonAttribute buttonAttribute = method.GetCustomAttribute<ButtonAttribute>();
+                if (buttonAttribute != null)
+                {
+                    priorityResolvers.Add(new PriorityResolver()
+                    {
+                        priority = -1,
+                        resolver = new ButtonResolver(task, method, buttonAttribute.name)
+                    });
+                }
+            }
+
             TaskNameAttribute attribute = type.GetCustomAttribute<TaskNameAttribute>();
             if (attribute != null)
             {

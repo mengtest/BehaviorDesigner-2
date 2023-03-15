@@ -10,7 +10,7 @@ namespace BehaviorDesigner.Editor
         {
             bool isChanged = false;
             Behavior behavior = target as Behavior;
-            BehaviorSource source = behavior.Source;
+            BehaviorSource source = behavior.GetSource(true);
             GUI.enabled = false;
             EditorGUILayout.PropertyField(serializedObject.FindProperty("m_Script"), true);
             GUI.enabled = true;
@@ -18,7 +18,7 @@ namespace BehaviorDesigner.Editor
             GUILayout.BeginHorizontal();
             EditorGUI.BeginChangeCheck();
             EditorGUILayout.LabelField("Behavior Name", GUILayout.Width(120f));
-            source.behaviorName = EditorGUILayout.TextField(behavior.Source.behaviorName);
+            source.behaviorName = EditorGUILayout.TextField(source.behaviorName);
             if (EditorGUI.EndChangeCheck())
             {
                 isChanged = true;
@@ -35,7 +35,7 @@ namespace BehaviorDesigner.Editor
             SerializedProperty property = serializedObject.FindProperty("external");
             ExternalBehavior oldExternal = property.objectReferenceValue as ExternalBehavior;
             EditorGUILayout.PropertyField(property, new GUIContent("External Behavior"), true);
-            source.group = EditorGUILayout.IntField("Group", behavior.Source.group);
+            EditorGUILayout.PropertyField(serializedObject.FindProperty("group"), true);
             if (EditorGUI.EndChangeCheck())
             {
                 isChanged = true;
@@ -62,11 +62,6 @@ namespace BehaviorDesigner.Editor
             {
                 serializedObject.ApplyModifiedProperties();
                 ExternalBehavior newExternal = property.objectReferenceValue as ExternalBehavior;
-                if (oldExternal != newExternal && newExternal)
-                {
-                    behavior.ClearSource();
-                }
-
                 EditorUtility.SetDirty(behavior);
                 if (oldExternal != newExternal && EditorWindow.HasOpenInstances<BehaviorWindow>())
                 {

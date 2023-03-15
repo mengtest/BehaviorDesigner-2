@@ -37,7 +37,7 @@ namespace BehaviorDesigner.Editor
 
         public BehaviorSource Source
         {
-            get { return behavior.Source; }
+            get { return behavior.GetSource(); }
         }
 
         public BehaviorView View
@@ -93,7 +93,7 @@ namespace BehaviorDesigner.Editor
         {
             this.behavior = behavior;
             behaviorId = behavior.InstanceID;
-            behaviorFileId = BehaviorUtils.GetFileId(behavior.Object);
+            behaviorFileId = BehaviorUtils.GetFileId(behavior.GetObject(true));
             serializeVersion = Source.Version;
             rootVisualElement.Clear();
             VisualElement root = rootVisualElement;
@@ -114,7 +114,7 @@ namespace BehaviorDesigner.Editor
             inspectorView.Init(this);
             variablesView.Init(this);
             Restore();
-            Undo.ClearUndo(behavior.Object);
+            Undo.ClearUndo(behavior.GetObject());
         }
 
         private void Clear()
@@ -137,7 +137,7 @@ namespace BehaviorDesigner.Editor
 
         public void Select(IBehavior behavior)
         {
-            if (behavior == null || !behavior.Object)
+            if (behavior == null || !behavior.GetObject(true))
             {
                 Init();
                 SelectObject(null);
@@ -169,7 +169,7 @@ namespace BehaviorDesigner.Editor
             }
 
             IBehavior behavior = selectedBehaviors[selectedIndex];
-            if (behavior == null || !behavior.Object)
+            if (behavior == null || !behavior.GetObject(true))
             {
                 Init();
                 SelectObject(null);
@@ -188,13 +188,13 @@ namespace BehaviorDesigner.Editor
             Object selectObj = null;
             if (behavior != null)
             {
-                if (behavior.Object is Component component)
+                if (behavior.GetObject(true) is Component component)
                 {
                     selectObj = component.gameObject;
                 }
                 else
                 {
-                    selectObj = behavior.Object;
+                    selectObj = behavior.GetObject(true);
                 }
             }
 
@@ -228,7 +228,7 @@ namespace BehaviorDesigner.Editor
 
         public void RegisterUndo(string undoName)
         {
-            Undo.RegisterCompleteObjectUndo(behavior.Object, undoName);
+            Undo.RegisterCompleteObjectUndo(behavior.GetObject(), undoName);
             serializeVersion = ++Source.Version;
         }
 
@@ -257,15 +257,15 @@ namespace BehaviorDesigner.Editor
 
         private void Save(IBehavior behavior)
         {
-            if (!behavior.Object)
+            if (!behavior.GetObject())
             {
                 return;
             }
 
             behaviorView.Save();
-            Source.Save(behavior.Source);
-            EditorUtility.SetDirty(behavior.Object);
-            AssetDatabase.SaveAssetIfDirty(behavior.Object);
+            Source.Save(behavior.GetSource());
+            EditorUtility.SetDirty(behavior.GetObject());
+            AssetDatabase.SaveAssetIfDirty(behavior.GetObject());
         }
 
         public void SaveAs()
@@ -321,10 +321,13 @@ namespace BehaviorDesigner.Editor
             {
                 if (Selection.activeObject is GameObject go)
                 {
-                    if (go.TryGetComponent(out IBehavior behavior) && !BehaviorUtils.HasComponent(go, behaviorId))
+                    if (go.TryGetComponent(out IBehavior behavior))
                     {
                         isSelectBehavior = true;
-                        Select(behavior);
+                        if (!BehaviorUtils.HasComponent(go, behaviorId))
+                        {
+                            Select(behavior);
+                        }
                     }
                 }
                 else if (Selection.activeObject is ExternalBehavior behavior)

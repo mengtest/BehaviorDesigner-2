@@ -30,10 +30,10 @@ namespace BehaviorDesigner.Editor
             choices = new List<string>(behaviors.Count);
             foreach (IBehavior behavior in behaviors)
             {
-                string choices = $"{behavior.Object.name} - {behavior.Source.behaviorName}";
+                string choices = $"{behavior.GetObject(true).name} - {behavior.GetSource(true).behaviorName}";
                 if (behavior is Behavior)
                 {
-                    if (PrefabUtility.IsPartOfPrefabAsset(behavior.Object))
+                    if (PrefabUtility.IsPartOfPrefabAsset(behavior.GetObject(true)))
                     {
                         choices += " (prefab)";
                     }

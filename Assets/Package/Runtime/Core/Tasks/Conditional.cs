@@ -2,9 +2,9 @@
 {
     public class Conditional : Task
     {
-        public sealed override void Bind(IBehavior behavior)
+        public sealed override void Bind(BehaviorSource source)
         {
-            base.Bind(behavior);
+            base.Bind(source);
         }
     }
 }
