@@ -27,10 +27,28 @@ namespace BehaviorDesigner.Editor
         {
             this.window = window;
             styleSheets.Add(BehaviorUtils.Load<StyleSheet>("Styles/BehaviorWindow"));
+            string posKey = $"BehaviorDesign.ViewTransform.{window.BehaviorFileId}.Position";
+            string sclKey = $"BehaviorDesign.ViewTransform.{window.BehaviorFileId}.Scale";
+            Vector3 pos = BehaviorUtils.GetPrefsVector3(posKey, viewTransform.position);
+            Vector3 scl = BehaviorUtils.GetPrefsVector3(sclKey, viewTransform.scale);
+            UpdateViewTransform(pos, scl);
             AddDefaultManipulator();
             RegisterCreationRequest();
             RegisterDeleteSelection();
             RegisterCopyAndPaste();
+        }
+
+        public void Dispose()
+        {
+            if (window == null)
+            {
+                return;
+            }
+
+            string posKey = $"BehaviorDesign.ViewTransform.{window.BehaviorFileId}.Position";
+            string sclKey = $"BehaviorDesign.ViewTransform.{window.BehaviorFileId}.Scale";
+            BehaviorUtils.SetPrefsVector3(posKey, viewTransform.position);
+            BehaviorUtils.SetPrefsVector3(sclKey, viewTransform.scale);
         }
 
         public override void BuildContextualMenu(ContextualMenuPopulateEvent evt)

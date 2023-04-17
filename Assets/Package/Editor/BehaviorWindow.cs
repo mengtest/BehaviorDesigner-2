@@ -47,7 +47,15 @@ namespace BehaviorDesigner.Editor
 
         public long BehaviorFileId
         {
-            get { return behaviorFileId; }
+            get
+            {
+                if (behaviorFileId == 0)
+                {
+                    return behaviorId;
+                }
+
+                return behaviorFileId;
+            }
         }
 
         [RuntimeInitializeOnLoadMethod]
@@ -91,6 +99,7 @@ namespace BehaviorDesigner.Editor
 
         private void Init(IBehavior behavior)
         {
+            Clear();
             this.behavior = behavior;
             behaviorId = behavior.InstanceID;
             behaviorFileId = BehaviorUtils.GetFileId(behavior.GetObject(true));
@@ -119,6 +128,7 @@ namespace BehaviorDesigner.Editor
 
         private void Clear()
         {
+            behaviorView?.Dispose();
             behavior = null;
             nodeFactory = null;
             fieldFactory = null;

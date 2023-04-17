@@ -71,5 +71,20 @@ namespace BehaviorDesigner.Editor
         {
             return EditorUtility.InstanceIDToObject(instanceID) is Component component && component.gameObject == go;
         }
+
+        public static Vector3 GetPrefsVector3(string key, Vector3 defaultValue)
+        {
+            defaultValue.x = EditorPrefs.GetFloat($"{key}_x", defaultValue.x);
+            defaultValue.y = EditorPrefs.GetFloat($"{key}_y", defaultValue.y);
+            defaultValue.z = EditorPrefs.GetFloat($"{key}_z", defaultValue.z);
+            return defaultValue;
+        }
+
+        public static void SetPrefsVector3(string key, Vector3 value)
+        {
+            EditorPrefs.SetFloat($"{key}_x", value.x);
+            EditorPrefs.SetFloat($"{key}_y", value.y);
+            EditorPrefs.SetFloat($"{key}_z", value.z);
+        }
     }
 }
