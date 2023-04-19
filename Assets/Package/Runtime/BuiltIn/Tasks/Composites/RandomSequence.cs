@@ -92,6 +92,12 @@ namespace BehaviorDesigner.Tasks
                     if (status == TaskStatus.Success)
                     {
                         currentChildIndex = RandomNext();
+#if UNITY_EDITOR
+                        if (UnityEditor.EditorApplication.isPaused)
+                        {
+                            return TaskStatus.Running;
+                        }
+#endif
                     }
                     else
                     {

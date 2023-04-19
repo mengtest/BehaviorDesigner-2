@@ -42,7 +42,7 @@ namespace BehaviorDesigner.Editor
             resolvers = new Dictionary<string, IFieldResolver>();
             RegisterMenu();
         }
-        
+
         public void Update()
         {
             if (Application.isPlaying)
@@ -221,7 +221,7 @@ namespace BehaviorDesigner.Editor
                 VariableField field = child as VariableField;
                 field?.UpdateBtnState();
             }
-            
+
             toolbarMenu.SetEnabled(scrollView.childCount > 0);
         }
 

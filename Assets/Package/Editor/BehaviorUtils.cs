@@ -26,6 +26,19 @@ namespace BehaviorDesigner.Editor
             return edge;
         }
 
+        public static void DisconnectPorts(Edge edge)
+        {
+            if (edge.input != null)
+            {
+                edge.input.Disconnect(edge);
+            }
+            
+            if (edge.output != null)
+            {
+                edge.output.Disconnect(edge);
+            }
+        }
+
         public static void OpenScript(object obj)
         {
             MonoScript script = FindScript(obj);

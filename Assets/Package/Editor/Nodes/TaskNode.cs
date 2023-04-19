@@ -93,9 +93,10 @@ namespace BehaviorDesigner.Editor
             if (parentPort.connected)
             {
                 Edge edge = BehaviorUtils.ConnectPorts(parentNode.ChildPort, newNode.ParentPort);
+                window.View.DeleteElements(parentPort.connections);
                 window.View.AddElement(edge);
             }
-            
+
             newNode.SetPosition(position);
         }
 
@@ -214,7 +215,7 @@ namespace BehaviorDesigner.Editor
                 container.Add(priorityResolver.resolver.EditorField);
             }
         }
-        
+
         public IEnumerable<GraphElement> CollectElements()
         {
             if (elements == null)
@@ -228,6 +229,15 @@ namespace BehaviorDesigner.Editor
 
             elements.Add(this);
             CollectElements(elements, e => (e.capabilities & Capabilities.Deletable) == Capabilities.Deletable);
+            foreach (GraphElement element in elements)
+            {
+                if (element is Edge edge)
+                {
+                    edge.output = null;
+                    edge.input = null;
+                }
+            }
+
             return elements;
         }
 
@@ -352,9 +362,13 @@ namespace BehaviorDesigner.Editor
             {
                 return;
             }
+            
+            if (task.CurrentStatus == TaskStatus.Running)
+            {
+                return;
+            }
 
             Color color = nodeBorder.style.backgroundColor.value;
-
             nodeBorder.style.backgroundColor = Color.LerpUnclamped(color, DefaultColor, Time.deltaTime * ColorLerpSpeed);
         }
 

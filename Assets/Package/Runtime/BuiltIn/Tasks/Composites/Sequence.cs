@@ -31,12 +31,18 @@
                     }
 
                     TaskStatus status = children[currentChildIndex].Update();
+
                     if (status == TaskStatus.Success || status == TaskStatus.Failure)
                     {
                         currentChildIndex++;
                         task.OnEnd();
                     }
-
+#if UNITY_EDITOR
+                    if (UnityEditor.EditorApplication.isPaused && status == TaskStatus.Success)
+                    {
+                        return TaskStatus.Running;
+                    }
+#endif
                     if (status != TaskStatus.Success)
                     {
                         return status;

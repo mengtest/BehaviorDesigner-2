@@ -26,16 +26,17 @@ namespace BehaviorDesigner.Editor
         public void Init(BehaviorWindow window)
         {
             this.window = window;
+            AddDefaultManipulator();
+            RegisterCreationRequest();
+            RegisterDeleteSelection();
+            RegisterCopyAndPaste();
+            
             styleSheets.Add(BehaviorUtils.Load<StyleSheet>("Styles/BehaviorWindow"));
             string posKey = $"BehaviorDesign.ViewTransform.{window.BehaviorFileId}.Position";
             string sclKey = $"BehaviorDesign.ViewTransform.{window.BehaviorFileId}.Scale";
             Vector3 pos = BehaviorUtils.GetPrefsVector3(posKey, viewTransform.position);
             Vector3 scl = BehaviorUtils.GetPrefsVector3(sclKey, viewTransform.scale);
             UpdateViewTransform(pos, scl);
-            AddDefaultManipulator();
-            RegisterCreationRequest();
-            RegisterDeleteSelection();
-            RegisterCopyAndPaste();
         }
 
         public void Dispose()

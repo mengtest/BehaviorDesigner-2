@@ -20,6 +20,7 @@ namespace BehaviorDesigner.Editor
         private InspectorView inspectorView;
         private VariablesView variablesView;
         private List<IBehavior> selectedBehaviors = new List<IBehavior>();
+        private List<SplitView> splitViews;
 
         private int behaviorId;
         private long behaviorFileId;
@@ -116,18 +117,28 @@ namespace BehaviorDesigner.Editor
             behaviorView = root.Q<BehaviorView>();
             inspectorView = root.Q<InspectorView>();
             variablesView = root.Q<VariablesView>();
+            splitViews = root.Query<SplitView>().ToList();
+            
             toolBar.Init(this);
             nameView.Init(this);
             descriptionView.Init(this);
             behaviorView.Init(this);
             inspectorView.Init(this);
             variablesView.Init(this);
+            int index = 0;
+            splitViews.ForEach(view => view.Init(this, index++));
             Restore();
             Undo.ClearUndo(behavior.GetObject());
         }
 
         private void Clear()
         {
+            if (splitViews != null)
+            {
+                splitViews.ForEach(view => view.Dispose());
+                splitViews = null;
+            }
+
             behaviorView?.Dispose();
             behavior = null;
             nodeFactory = null;

@@ -35,6 +35,7 @@ namespace BehaviorDesigner.Editor
             ParentTask newParentTask = newParentNode.task as ParentTask;
             for (int i = 0; i < children.Count && i < newParentTask.MaxChildren; i++)
             {
+                newParentTask.Children.Add(children[i].Task);
                 Edge edge = BehaviorUtils.ConnectPorts(newParentNode.childPort, children[i].ParentPort);
                 window.View.AddElement(edge);
             }

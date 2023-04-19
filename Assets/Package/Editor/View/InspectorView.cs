@@ -26,7 +26,7 @@ namespace BehaviorDesigner.Editor
                     BehaviorUtils.OpenScript(task);
                 }
             });
-            
+
             toolbarMenu.menu.AppendAction("Locate Script", action =>
             {
                 if (task != null)
@@ -34,7 +34,7 @@ namespace BehaviorDesigner.Editor
                     BehaviorUtils.SelectScript(task);
                 }
             });
-            
+
             toolbarMenu.menu.AppendAction("Reset", action =>
             {
                 if (taskNode != null)
@@ -43,7 +43,7 @@ namespace BehaviorDesigner.Editor
                     Restore();
                 }
             });
-            
+
             toolbarMenu.SetEnabled(false);
         }
 
@@ -72,7 +72,7 @@ namespace BehaviorDesigner.Editor
                         taskNode.OnGUI(scrollView);
                         toolbarMenu.SetEnabled(true);
                     }
-                    
+
                     break;
                 }
             }
